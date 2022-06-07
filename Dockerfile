@@ -1,19 +1,23 @@
 # Base image
-FROM python:alpine
+FROM python:3.7
 
-# Running every next command wih this user
-USER root
-EXPOSE 8501
-
-# Installing Flask App
-RUN pip install streamlit==1.9
-RUN pip install -r requirements.txt
 
 # Creating work directory in docker
 WORKDIR /app
 
-# Copying files to docker
-COPY . '/app'
+# Copying files to docker 
 
-# Starting application #["python", "app.py"]
-CMD streamlit run frontend.py
+COPY requirements.txt ./requirements.txt
+
+
+# Installing requirements
+RUN apt-get update && pip install -r requirements.txt
+
+EXPOSE 8501
+
+ADD . /app 
+
+# Starting application
+ENTRYPOINT ["streamlit", "run"]
+
+CMD ["frontend.py"]
